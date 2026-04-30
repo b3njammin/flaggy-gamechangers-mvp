@@ -1,0 +1,112 @@
+{
+  "name": "Report",
+  "type": "object",
+  "properties": {
+    "report_type": {
+      "type": "string",
+      "enum": [
+        "toxic_behavior",
+        "stalking",
+        "harassment",
+        "gore",
+        "sexual_content",
+        "misinformation",
+        "threats",
+        "other"
+      ],
+      "description": "Type of behavior being reported"
+    },
+    "game_name": {
+      "type": "string",
+      "description": "Name of the game where incident occurred"
+    },
+    "server_region": {
+      "type": "string",
+      "description": "Server region where incident occurred"
+    },
+    "description": {
+      "type": "string",
+      "description": "Additional details about the incident"
+    },
+    "screenshot_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs of uploaded screenshots for evidence"
+    },
+    "allow_moderator_contact": {
+      "type": "boolean",
+      "default": true,
+      "description": "User permits moderators to contact them for more info"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "investigating",
+        "resolved",
+        "dismissed"
+      ],
+      "default": "pending",
+      "description": "Current status of the report"
+    },
+    "ai_confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "AI confidence score for report validity (0-100)"
+    },
+    "ai_analysis_details": {
+      "type": "object",
+      "description": "Detailed breakdown of AI analysis across categories",
+      "properties": {
+        "IsHateSpeech": {
+          "type": "number"
+        },
+        "IsHarassment": {
+          "type": "number"
+        },
+        "IsMisinformation": {
+          "type": "number"
+        },
+        "IsRadicalization": {
+          "type": "number"
+        },
+        "IsSelfHarm": {
+          "type": "number"
+        },
+        "IsViolent": {
+          "type": "number"
+        },
+        "IsSexualExploitation": {
+          "type": "number"
+        },
+        "IsSpamScam": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "required": [
+    "report_type",
+    "game_name"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}
